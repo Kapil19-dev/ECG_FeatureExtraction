@@ -58,6 +58,7 @@ class FullWaveformFeatures:
         self.templates_ts = templates_ts
         self.templates = templates
         self.fs = fs
+        self.leadname = ['v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'aVL', 'ld1', 'aVR', 'ld2', 'aVF', 'ld3']
 
         # Feature dictionary
         self.full_waveform_features = dict()
@@ -75,14 +76,14 @@ class FullWaveformFeatures:
         basic_features = dict()
 
         # Calculate statistics
-        basic_features[f'full_waveform_min_{self.lead}'] = np.min(self.signal_filtered)
-        basic_features[f'full_waveform_max_{self.lead}'] = np.max(self.signal_filtered)
-        basic_features[f'full_waveform_mean_{self.lead}'] = np.mean(self.signal_filtered)
-        basic_features[f'full_waveform_median_{self.lead}'] = np.median(self.signal_filtered)
-        basic_features[f'full_waveform_std_{self.lead}'] = np.std(self.signal_filtered)
-        basic_features[f'full_waveform_skew_{self.lead}'] = sp.stats.skew(self.signal_filtered)
-        basic_features[f'full_waveform_kurtosis_{self.lead}'] = sp.stats.kurtosis(self.signal_filtered)
-        basic_features[f'full_waveform_duration_{self.lead}'] = np.max(self.ts)
+        basic_features[f'full_waveform_min_{self.leadname[self.lead]}'] = np.min(self.signal_filtered)
+        basic_features[f'full_waveform_max_{self.leadname[self.lead]}'] = np.max(self.signal_filtered)
+        basic_features[f'full_waveform_mean_{self.leadname[self.lead]}'] = np.mean(self.signal_filtered)
+        basic_features[f'full_waveform_median_{self.leadname[self.lead]}'] = np.median(self.signal_filtered)
+        basic_features[f'full_waveform_std_{self.leadname[self.lead]}'] = np.std(self.signal_filtered)
+        basic_features[f'full_waveform_skew_{self.leadname[self.lead]}'] = sp.stats.skew(self.signal_filtered)
+        basic_features[f'full_waveform_kurtosis_{self.leadname[self.lead]}'] = sp.stats.kurtosis(self.signal_filtered)
+        basic_features[f'full_waveform_duration_{self.leadname[self.lead]}'] = np.max(self.ts)
 
         return basic_features
 
@@ -125,11 +126,11 @@ class FullWaveformFeatures:
             mean_power_high = np.trapz(y=pxx[freq_band_high_index], x=fxx[freq_band_high_index])
 
             # Calculate max/mean power ratio
-            stationary_wavelet_transform_features['swt_d_' + str(level+1) + '_low_power_ratio_'+ str(self.lead)] = \
+            stationary_wavelet_transform_features['swt_d_' + str(level+1) + '_low_power_ratio_'+ self.leadname[self.lead]] = \
                 max_power_low / mean_power_low
-            stationary_wavelet_transform_features['swt_d_' + str(level+1) + '_med_power_ratio_'+ str(self.lead)] = \
+            stationary_wavelet_transform_features['swt_d_' + str(level+1) + '_med_power_ratio_'+ self.leadname[self.lead]] = \
                 max_power_med / mean_power_med
-            stationary_wavelet_transform_features['swt_d_' + str(level+1) + '_high_power_ratio_'+ str(self.lead)] = \
+            stationary_wavelet_transform_features['swt_d_' + str(level+1) + '_high_power_ratio_'+ self.leadname[self.lead]] = \
                 max_power_high / mean_power_high
 
             """Approximation"""
@@ -152,11 +153,11 @@ class FullWaveformFeatures:
             mean_power_high = np.trapz(y=pxx[freq_band_high_index], x=fxx[freq_band_high_index])
 
             # Calculate max/mean power ratio
-            stationary_wavelet_transform_features['swt_a_' + str(level+1) + '_low_power_ratio_'+ str(self.lead)] = \
+            stationary_wavelet_transform_features['swt_a_' + str(level+1) + '_low_power_ratio_'+ self.leadname[self.lead]] = \
                 max_power_low / mean_power_low
-            stationary_wavelet_transform_features['swt_a_' + str(level+1) + '_med_power_ratio_'+ str(self.lead)] = \
+            stationary_wavelet_transform_features['swt_a_' + str(level+1) + '_med_power_ratio_'+ self.leadname[self.lead]] = \
                 max_power_med / mean_power_med
-            stationary_wavelet_transform_features['swt_a_' + str(level+1) + '_high_power_ratio_'+ str(self.lead)] = \
+            stationary_wavelet_transform_features['swt_a_' + str(level+1) + '_high_power_ratio_'+ self.leadname[self.lead]] = \
                 max_power_high / mean_power_high
 
         """Non-Linear"""
@@ -164,20 +165,20 @@ class FullWaveformFeatures:
 
             """Detail"""
             # Log-energy entropy
-            stationary_wavelet_transform_features['swt_d_' + str(level+1) + '_energy_entropy_'+ str(self.lead)] = \
+            stationary_wavelet_transform_features['swt_d_' + str(level+1) + '_energy_entropy_'+ self.leadname[self.lead]] = \
                 np.sum(np.log10(np.power(swt[level]['d'], 2)))
 
             # Higuchi_fractal
-            stationary_wavelet_transform_features['swt_d_' + str(level+1) + '_higuchi_fractal_'+ str(self.lead)] = \
+            stationary_wavelet_transform_features['swt_d_' + str(level+1) + '_higuchi_fractal_'+ self.leadname[self.lead]] = \
                 hfd(swt[level]['d'], k_max=10)
 
             """Approximation"""
             # Log-energy entropy
-            stationary_wavelet_transform_features['swt_a_' + str(level+1) + '_energy_entropy_'+ str(self.lead)] = \
+            stationary_wavelet_transform_features['swt_a_' + str(level+1) + '_energy_entropy_'+ self.leadname[self.lead]] = \
                 np.sum(np.log10(np.power(swt[level]['a'], 2)))
 
             # Higuchi_fractal
-            stationary_wavelet_transform_features['swt_a_' + str(level+1) + '_higuchi_fractal_'+ str(self.lead)] = \
+            stationary_wavelet_transform_features['swt_a_' + str(level+1) + '_higuchi_fractal_'+ self.leadname[self.lead]] = \
                 hfd(swt[level]['a'], k_max=10)
 
         return stationary_wavelet_transform_features
